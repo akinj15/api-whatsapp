@@ -4,8 +4,8 @@ import { z } from "zod";
 
 export default async (req: Request, res: Response, next: any) => {
   const authorizationSchema = z.object({
-    identificadorNumero: z.string(),
-    identificadorConta: z.string(),
+    identificadornumero: z.string(),
+    identificadorconta: z.string(),
   });
   const authorization = authorizationSchema.parse(req.headers);
   try {

@@ -26,7 +26,7 @@ model Client {
   id                  Int    @id @default(autoincrement())
   name                String @unique
   email               String @unique
-  identificadorNumero String @unique
-  identificadorConta  String @unique
-  whatsappToken       String @unique
+  identificadornumero String @unique
+  identificadorconta  String @unique
+  whatsapptoken       String @unique
 }

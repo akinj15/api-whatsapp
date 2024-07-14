@@ -18,7 +18,7 @@ class MessageController {
 
     if (identificadorconta && typeof identificadorconta == "string") {
       let res = await clientService.findClientByIdentificadorConta(identificadorconta);
-      token = res.whatsappToken
+      token = res.whatsapptoken
     }
 
     const message = messageSchena.parse({
