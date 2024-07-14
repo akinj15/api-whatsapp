@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  api:
+    container_name: api
+    image: 'node:20'
+    networks:
+      - base_network
+    ports:
+      - '3001:3001'
+    command: sh -c "yarn install && yarn dev"
+    depends_on:
+      - db
+    working_dir: /app
+    volumes:
+      - ./:/app
+    env_file:
+      - .env
+
+networks:
+  base_network:
