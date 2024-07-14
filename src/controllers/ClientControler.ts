@@ -7,9 +7,9 @@ class ClientController {
     const clientSchema = z.object({
       name: z.string(),
       email: z.string(),
-      identificadorNumero: z.string(),
-      identificadorConta: z.string(),
-      whatsappToken: z.string(),
+      identificadornumero: z.string(),
+      identificadorconta: z.string(),
+      whatsapptoken: z.string(),
     });
 
     const client = clientSchema.parse(request.body);
@@ -39,9 +39,9 @@ class ClientController {
       const clientSchema = z.object({
         name: z.string(),
         email: z.string(),
-        identificadorNumero: z.string(),
-        identificadorConta: z.string(),
-        whatsappToken: z.string(),
+        identificadornumero: z.string(),
+        identificadorconta: z.string(),
+        whatsapptoken: z.string(),
       });
 
       const client = clientSchema.parse(request.body);

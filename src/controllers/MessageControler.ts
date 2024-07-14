@@ -17,7 +17,9 @@ class MessageController {
     });
 
     if (identificadorconta && typeof identificadorconta == "string") {
-      let res = await clientService.findClientByIdentificadorConta(identificadorconta);
+      let res = await clientService.findClientByIdentificadorconta(
+        identificadorconta
+      );
       token = res.whatsapptoken
     }
 
@@ -55,10 +57,10 @@ class MessageController {
     }
 
     if (identificadorconta && typeof identificadorconta == "string") {
-      let res = await clientService.findClientByIdentificadorConta(
+      let res = await clientService.findClientByIdentificadorconta(
         identificadorconta
       );
-      token = res.whatsappToken;
+      token = res.whatsapptoken;
     }
 
 
