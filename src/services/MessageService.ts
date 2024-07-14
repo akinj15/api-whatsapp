@@ -44,14 +44,16 @@ class MessageService {
           "Content-Type": "application/json",
         },
       };
+      console.log(body)
       let res = await axios.post(url, body, header);
       return res.data;
     } catch (error) {
+      console.log(error)
       throw error;
     }
   }
 
-  async document(message: DocumentMessageInput) {
+  async   document(message: DocumentMessageInput) {
     try {
       let documentId = await this.uploadDocument(message);
       if (!documentId) {

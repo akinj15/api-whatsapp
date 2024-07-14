@@ -1,13 +1,11 @@
 import { Response, Request } from "express";
-import { messageService, clientService } from "../services";
+import { messageService } from "../services";
 import { z } from "zod";
 
 class MessageController {
   async text(request: Request, response: Response) {
-    let token;
     const { text, number } = request.body;
-    console.log(request.headers);
-    const { identificadornumero, identificadorconta } = request.headers;
+    const { identificadornumero, identificadorconta, token } = request.headers;
     const messageSchena = z.object({
       text: z.string(),
       number: z.string(),
@@ -15,13 +13,6 @@ class MessageController {
       identificadorconta: z.string(),
       token: z.string(),
     });
-
-    if (identificadorconta && typeof identificadorconta == "string") {
-      let res = await clientService.findClientByIdentificadorconta(
-        identificadorconta
-      );
-      token = res.whatsapptoken
-    }
 
     const message = messageSchena.parse({
       text,
@@ -44,10 +35,8 @@ class MessageController {
 
   async document(request: Request, response: Response) {
     let filename, mimetype;
-    let token;
     const { text, number, caption } = request.body;
-    const { identificadornumero, identificadorconta } = request.headers;
-
+    const { identificadornumero, identificadorconta, token } = request.headers;
     if (
       (request.file && request.file.filename) &&
       (request.file && request.file.mimetype)
@@ -55,14 +44,6 @@ class MessageController {
       filename = request.file.filename;
       mimetype = request.file.mimetype;
     }
-
-    if (identificadorconta && typeof identificadorconta == "string") {
-      let res = await clientService.findClientByIdentificadorconta(
-        identificadorconta
-      );
-      token = res.whatsapptoken;
-    }
-
 
     const messageSchena = z.object({
       number: z.string(),

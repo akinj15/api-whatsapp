@@ -2,3 +2,5 @@ node_modules
 build
 postgres
 .env
+dev.db
+prisma/dev.db
