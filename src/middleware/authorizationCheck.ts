@@ -12,7 +12,6 @@ export default async (req: Request, res: Response, next: any) => {
     let client = await prisma.client.findUnique({
       where: authorization
     })
-    console.log(client)
     if (!client) {
       throw {error: "Client não cadastrado."}
     }

@@ -37,6 +37,7 @@ class ClientController {
   async updateClient(request: Request, response: Response) {
     try {
       const clientSchema = z.object({
+        id: z.string(),
         name: z.string(),
         email: z.string(),
         identificadornumero: z.string(),
@@ -56,9 +57,20 @@ class ClientController {
 
   async findClientById(request: Request, response: Response) {
     try {
-      const paramsSchema = z.number()
-      const id = paramsSchema.parse(request.params.id)
+      const paramsSchema = z.string();
+      const id = paramsSchema.parse(request.params.id);
       const client = await clientService.findClientById(id);
+      return response.status(200).send({ client });
+    } catch (e) {
+      return response.status(401).send({ error: e });
+    }
+  }
+
+  async deleteClient(request: Request, response: Response) {
+    try {
+      const paramsSchema = z.string();
+      const id = paramsSchema.parse(request.params.id);
+      const client = await clientService.deleteClient(id);
       return response.status(200).send({ client });
     } catch (e) {
       return response.status(401).send({ error: e });
@@ -67,3 +79,4 @@ class ClientController {
 }
 
 export const clientController = new ClientController()
+  

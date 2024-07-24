@@ -1,7 +1,7 @@
 import { prisma } from "../database";
 
 type Client = {
-  id?:number;
+  id?: string;
   name: string; 
   email: string;
   identificadornumero: string;
@@ -27,7 +27,7 @@ class ClientService {
     }
   }
 
-  async findClientById(id: number) {
+  async findClientById(id: string) {
     let clientDB = await prisma.client.findUnique({
       where: { id: id },
     });
@@ -53,6 +53,8 @@ class ClientService {
   }
 
   async updateClient(client: Client) {
+    console.log(client)
+
     let clientDB = await prisma.client.update({
       where: {
         id: client.id,
@@ -65,6 +67,16 @@ class ClientService {
         whatsapptoken: client.whatsapptoken,
       },
     });
+    return clientDB;
+  }
+
+  async deleteClient(id: string) {
+    let clientDB = await prisma.client.delete({
+      where: { id: id },
+    });
+    if (!clientDB?.id) {
+      throw { error: "user not found" };
+    }
     return clientDB;
   }
 }

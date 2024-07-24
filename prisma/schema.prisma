@@ -14,19 +14,31 @@ generator client {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  name     String @unique
-  password String @unique
-  email    String @unique
-  fone     String @unique
-  token    String @unique
+  id        String  @id @default(uuid())
+  email     String  @unique
+  username  String  @unique
+  token     String? @unique
+  password  String?
+  firstname String?
+  surname   String?
+  lastname  String?
+  role      Role    @relation(fields: [roleId], references: [id])
+  roleId    String
 }
 
 model Client {
-  id                  Int    @id @default(autoincrement())
+  id                  String @id @default(uuid())
   name                String @unique
   email               String @unique
   identificadornumero String @unique
   identificadorconta  String @unique
   whatsapptoken       String @unique
+}
+
+model Role {
+  id       String @id @default(uuid())
+  name     String @unique
+  color    String
+  keywords String
+  user     User[]
 }

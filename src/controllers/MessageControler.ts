@@ -34,6 +34,7 @@ class MessageController {
   }
 
   async document(request: Request, response: Response) {
+    console.log(request);
     let filename, mimetype;
     const { text, number, caption } = request.body;
     const { identificadornumero, identificadorconta, token } = request.headers;
