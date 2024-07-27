@@ -7,8 +7,8 @@ export default async (req: Request, res: Response, next: any) => {
     identificadornumero: z.string(),
     identificadorconta: z.string(),
   });
-  const authorization = authorizationSchema.parse(req.headers);
   try {
+    const authorization = authorizationSchema.parse(req.headers);
     let client = await prisma.client.findUnique({
       where: authorization
     })

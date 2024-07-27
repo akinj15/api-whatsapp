@@ -24,9 +24,9 @@ class MessageController {
 
     try {
       const res = await messageService.text(message);
-      return response.status(200).send({res});
+      return response.status(200).send({ res });
     } catch (error) {
-          return response.status(500).send({
+      return response.status(500).send({
         error: "falha no envio da mensagem de texto.",
         message: error,
       });
@@ -39,8 +39,10 @@ class MessageController {
     const { text, number, caption } = request.body;
     const { identificadornumero, identificadorconta, token } = request.headers;
     if (
-      (request.file && request.file.filename) &&
-      (request.file && request.file.mimetype)
+      request.file &&
+      request.file.filename &&
+      request.file &&
+      request.file.mimetype
     ) {
       filename = request.file.filename;
       mimetype = request.file.mimetype;
@@ -75,6 +77,15 @@ class MessageController {
         error: "falha no envio da mensagem de texto.",
         message: error,
       });
+    }
+  }
+
+  async listaMensagens(request: Request, response: Response) {
+    try {
+      let mensagens = await messageService.listaMensagens();
+      return response.status(200).send({mensagens});
+    } catch (e) {
+      return response.status(401).send({ error: e });
     }
   }
 }

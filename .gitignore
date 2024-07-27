@@ -3,4 +3,4 @@ build
 postgres
 .env
 dev.db
-prisma/dev.db
+logs/main.log

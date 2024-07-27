@@ -2,6 +2,7 @@ import axios from "axios";
 import FormData from "form-data";
 import fs from "fs";
 import path from "path";
+import { prisma } from "../database";
 
 type TextMessageInput = {
   text: string
@@ -10,6 +11,13 @@ type TextMessageInput = {
   identificadorconta: string
   token: string
 }
+
+type ClientMessageInput = {
+  type: string;
+  to: string;
+  identificadornumero: string;
+  identificadorconta: string;
+};
 
 type DocumentMessageInput = {
   number: string;
@@ -27,7 +35,7 @@ class MessageService {
       const url =
         "https://graph.facebook.com/v20.0/" +
         message.identificadornumero +
-        "/messages";    
+        "/messages";
       const body = {
         messaging_product: "whatsapp",
         recipient_type: "individual",
@@ -44,16 +52,21 @@ class MessageService {
           "Content-Type": "application/json",
         },
       };
-      console.log(body)
       let res = await axios.post(url, body, header);
+      await this.gravaMensagemCliente({
+        identificadornumero: message.identificadornumero,
+        identificadorconta: message.identificadorconta,
+        to: message.number,
+        type: "text",
+      });
       return res.data;
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw error;
     }
   }
 
-  async   document(message: DocumentMessageInput) {
+  async document(message: DocumentMessageInput) {
     try {
       let documentId = await this.uploadDocument(message);
       if (!documentId) {
@@ -61,10 +74,16 @@ class MessageService {
       }
       let res = await this.sendDocument(message, documentId);
       await this.deleteDocument(documentId, message.token);
+      await this.gravaMensagemCliente({
+        identificadornumero: message.identificadornumero,
+        identificadorconta: message.identificadorconta,
+        to: message.number,
+        type: "document",
+      });
       return res;
     } catch (error) {
       throw error;
-    }       
+    }
   }
 
   async uploadDocument(
@@ -124,7 +143,7 @@ class MessageService {
           caption: message.caption,
         },
       };
-      const header = {    
+      const header = {
         headers: {
           Authorization: "Bearer " + message.token,
           "Content-Type": "application/json",
@@ -146,7 +165,40 @@ class MessageService {
         },
       };
       let res = await axios.delete(urlMedia, header);
-      if (!res.data.success) throw {error: "falha ao deletar o documento na api whatsapp"}
+      if (!res.data.success)
+        throw { error: "falha ao deletar o documento na api whatsapp" };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async gravaMensagemCliente(message: ClientMessageInput) {
+    try {
+      const authorization = {
+        identificadornumero: message.identificadornumero,
+        identificadorconta: message.identificadorconta,
+      };
+      let client = await prisma.client.findUnique({
+        where: authorization,
+      });
+      if (client) {
+        await prisma.message.create({
+          data: {
+            to: message.to,
+            type: "text",
+            clientId: client.id,
+          },
+        });
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async listaMensagens() {
+    try {
+      let mensagem = await prisma.message.findMany({include: {client: true}});
+      return mensagem;
     } catch (error) {
       throw error;
     }

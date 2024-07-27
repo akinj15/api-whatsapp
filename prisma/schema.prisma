@@ -27,12 +27,13 @@ model User {
 }
 
 model Client {
-  id                  String @id @default(uuid())
-  name                String @unique
-  email               String @unique
-  identificadornumero String @unique
-  identificadorconta  String @unique
-  whatsapptoken       String @unique
+  id                  String    @id @default(uuid())
+  name                String    @unique
+  email               String    @unique
+  identificadornumero String    @unique
+  identificadorconta  String    @unique
+  whatsapptoken       String    @unique
+  message             Message[]
 }
 
 model Role {
@@ -41,4 +42,13 @@ model Role {
   color    String
   keywords String
   user     User[]
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  to        String
+  type      String
+  createdAt DateTime @default(now())
+  client    Client   @relation(fields: [clientId], references: [id])
+  clientId  String
 }

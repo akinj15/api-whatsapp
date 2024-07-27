@@ -1,6 +1,7 @@
 import { Response, Request } from "express";
 import { userService } from "../services";
 import * as z from "zod";
+import { logger } from "../logger";
 
 class UserController {
   async create(request: Request, response: Response) {
@@ -35,8 +36,10 @@ class UserController {
       }
 
       let token = await userService.login({ email, password });
+      logger.log("debug", "Sucesso ao efetuar o login");
       return response.status(200).send({ token: token });
     } catch (e) {
+      logger.log("debug", "Falha ao efetuar o login");
       return response.status(403).send({ error: e });
     }
   }
